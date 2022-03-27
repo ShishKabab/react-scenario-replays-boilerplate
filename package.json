@@ -18,7 +18,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "concurrently -n FE,BE \"yarn frontend\" \"yarn backend\"",
+    "frontend": "BROWSER=none react-scripts start",
+    "backend": "NODE_ENV=development ts-node --project backend/tsconfig.json backend/main.ts",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -29,8 +31,8 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,less,scss,html,md,vue,jsx}": [
-      "./node_modules/.bin/prettier --config ./node_modules/prettier-quick/.prettierrc --write",
+    "**/*.{js,jsx,ts,tsx,json}": [
+      "./node_modules/.bin/prettier --write",
       "git add"
     ]
   },
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.5.0",
+    "concurrently": "^7.0.0",
     "husky": "^4",
     "lint-staged": "^12.3.7",
     "prettier": "^2.6.1",
