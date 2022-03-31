@@ -1,6 +1,6 @@
 import { render } from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import ScenarioReplayContext from "../features/scenario-replays/context";
+import ScenarioReplayContext from "../features/scenario-replays/react-context";
 import ComponentRegistry from "../features/scenario-replays/registry";
 import { getRoutes } from "../router";
 import { GlobalQueryParams } from "./types";

@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import ScenarioReplayContext, { ScenarioReplayContextData } from "./context";
+import ScenarioReplayContext, { ScenarioReplayContextData } from "./react-context";
 import ComponentRegistry from "./registry";
 
 interface State {
