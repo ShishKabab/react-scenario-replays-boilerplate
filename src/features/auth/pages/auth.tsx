@@ -1,7 +1,15 @@
 import * as React from "react";
+import { enableScenarios, scenarioCallable } from "../../scenario-replays/decorators";
 
-export default class AuthPage extends React.Component {
+class AuthPage extends React.Component {
+  @scenarioCallable()
+  changeEmail() {
+    console.log("boo!");
+  }
+
   render() {
-    return "auth";
+    return <div onClick={() => this.changeEmail()}>Auth</div>;
   }
 }
+
+export default enableScenarios()(AuthPage);

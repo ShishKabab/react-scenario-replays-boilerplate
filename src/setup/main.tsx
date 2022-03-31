@@ -1,5 +1,7 @@
 import { render } from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+import ScenarioReplayContext from "../features/scenario-replays/context";
+import ComponentRegistry from "../features/scenario-replays/registry";
 import { getRoutes } from "../router";
 import { GlobalQueryParams } from "./types";
 
@@ -8,6 +10,12 @@ export function runMainProgram(options: { queryParams: GlobalQueryParams }) {
   if (options.queryParams.scenario) {
   }
 
+  const componentRegistry = new ComponentRegistry();
   const rootElement = document.getElementById("root");
-  render(<BrowserRouter>{getRoutes()}</BrowserRouter>, rootElement);
+  render(
+    <ScenarioReplayContext.Provider value={{ componentRegistry }}>
+      <BrowserRouter>{getRoutes()}</BrowserRouter>
+    </ScenarioReplayContext.Provider>,
+    rootElement
+  );
 }
