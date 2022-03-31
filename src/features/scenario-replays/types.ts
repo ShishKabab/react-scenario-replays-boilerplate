@@ -8,4 +8,5 @@ export interface ScenarioIdentifier {
 export type ScenarioMap<Components extends ScenarioComponentMap> = {
   [name: string]: (context: ScenarioContext<Components>) => Promise<void>;
 };
-export type ScenarioComponentMap = { [ComponentName: string]: { [MethodName: string]: Function } };
+export type ScenarioComponentMap = Record<string, {}>;
+// export type ScenarioComponentMap = { [ComponentName: string]: { [MethodName: string]: Function } };
