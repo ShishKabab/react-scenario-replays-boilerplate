@@ -1,10 +1,19 @@
-import ComponentRegistry from "./registry";
-import { ComponentSelector, ScenarioComponentMap, StringKeyOf } from "./types";
+import { ComponentSelector, ScenarioComponentMap, ScenarioReplayDependencies, StringKeyOf } from "./types";
 
-export default class ScenarioContext<Components extends ScenarioComponentMap> {
-  constructor(public deps: { componentRegistry: ComponentRegistry }) {}
+export default class ScenarioContext<Components extends ScenarioComponentMap<Components>> {
+  constructor(public deps: ScenarioReplayDependencies) {}
 
-  async navigateTo(path: string) {}
+  async navigateTo(path: string) {
+    const { history } = this.deps;
+    const { location } = history;
+    const currentUrl = new URL(location.pathname + location.search, window.location.origin);
+    const identifierString = currentUrl.searchParams.get("scenario");
+    if (identifierString) {
+      const nextUrl = new URL(path, window.location.origin);
+      nextUrl.searchParams.set("scenario", identifierString);
+      path = nextUrl.pathname + nextUrl.search;
+    }
+  }
 
   componentMethod<
     ComponentName extends StringKeyOf<Components>,
@@ -39,5 +48,6 @@ export default class ScenarioContext<Components extends ScenarioComponentMap> {
         ? (methodNameOrSelector as MethodName)
         : (dataOrMethodName as MethodName);
     const selector: ComponentSelector = typeof methodNameOrSelector !== "string" ? methodNameOrSelector : {};
+    await this.deps.componentRegistry.componentMethod(componentName, methodName, data, selector);
   }
 }

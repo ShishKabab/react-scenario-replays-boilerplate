@@ -1,3 +1,5 @@
+import type { History } from "history";
+import type ComponentRegistry from "./registry";
 import ScenarioContext from "./scenario-context";
 
 export interface ScenarioIdentifier {
@@ -5,11 +7,17 @@ export interface ScenarioIdentifier {
   scenarioName: string;
 }
 
-export type ScenarioMap<Components extends ScenarioComponentMap> = {
-  [name: string]: (context: ScenarioContext<Components>) => Promise<void>;
+export type Scenario<Components extends ScenarioComponentMap<Components>> = (
+  context: ScenarioContext<Components>
+) => Promise<void>;
+
+export type ScenarioMap<Components extends ScenarioComponentMap<Components>> = {
+  [name: string]: Scenario<Components>;
 };
-export type ScenarioComponentMap = Record<string, {}>;
-// export type ScenarioComponentMap = { [ComponentName: string]: { [MethodName: string]: Function } };
+// export type ScenarioComponentMap = Record<string, {}>;
+export type ScenarioComponentMap<Components> = {
+  [ComponentName in keyof Components]: { [MethodName in keyof Components[ComponentName]]: (...args: any[]) => void };
+};
 
 export type ComponentSelector = { [key: string]: any };
 export interface WithComponentSelector {
@@ -17,3 +25,8 @@ export interface WithComponentSelector {
 }
 
 export type StringKeyOf<T> = Extract<keyof T, string>;
+
+export interface ScenarioReplayDependencies {
+  history: History;
+  componentRegistry: ComponentRegistry;
+}

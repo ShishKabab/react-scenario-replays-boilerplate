@@ -8,10 +8,10 @@ interface State {
 
 export function scenarioCallable() {
   return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
-    const origFunction = descriptor.value;
+    const origFunction: (...args: any) => void = descriptor.value;
     descriptor.value = function (...args: any) {
       console.log(this);
-      return origFunction(args);
+      return origFunction.apply(this, args);
     };
   };
 }
