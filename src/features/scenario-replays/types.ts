@@ -12,5 +12,8 @@ export type ScenarioComponentMap = Record<string, {}>;
 // export type ScenarioComponentMap = { [ComponentName: string]: { [MethodName: string]: Function } };
 
 export type ComponentSelector = { [key: string]: any };
+export interface WithComponentSelector {
+  componentSelector?: ComponentSelector;
+}
 
 export type StringKeyOf<T> = Extract<keyof T, string>;

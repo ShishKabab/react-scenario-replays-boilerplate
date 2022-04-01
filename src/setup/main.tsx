@@ -1,5 +1,6 @@
 import { render } from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
+import { createBrowserHistory } from "history";
 import ScenarioReplayContext from "../features/scenario-replays/react-context";
 import ComponentRegistry from "../features/scenario-replays/registry";
 import { getRoutes } from "../router";
@@ -7,6 +8,7 @@ import { GlobalQueryParams } from "./types";
 
 export function runMainProgram(options: { queryParams: GlobalQueryParams }) {
   console.log("main prog");
+  const history = createBrowserHistory();
   if (options.queryParams.scenario) {
   }
 
@@ -14,7 +16,7 @@ export function runMainProgram(options: { queryParams: GlobalQueryParams }) {
   const rootElement = document.getElementById("root");
   render(
     <ScenarioReplayContext.Provider value={{ componentRegistry }}>
-      <BrowserRouter>{getRoutes()}</BrowserRouter>
+      <HistoryRouter history={history}>{getRoutes()}</HistoryRouter>
     </ScenarioReplayContext.Provider>,
     rootElement
   );
