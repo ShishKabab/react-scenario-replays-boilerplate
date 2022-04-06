@@ -6,5 +6,6 @@ export const SCENARIOS: ScenarioMap<{ AuthPage: AuthPageMethods }> = {
     await context.navigateTo("/auth");
     await context.componentMethod("AuthPage", "changeEmail", { value: "test@test.com" });
     await context.componentMethod("AuthPage", "changePassword", { value: "spamhameggs" });
+    await context.componentMethod("AuthPage", "submit", {});
   },
 };

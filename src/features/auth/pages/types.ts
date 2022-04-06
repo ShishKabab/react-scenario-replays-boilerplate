@@ -5,4 +5,5 @@ export interface AuthPageState {
 export interface AuthPageMethods {
   changeEmail(data: { value: string }): void;
   changePassword(data: { value: string }): void;
+  submit(data: {}): void;
 }
