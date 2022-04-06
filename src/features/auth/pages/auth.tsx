@@ -7,7 +7,7 @@ import { navigateTo } from "../../../router";
 
 class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMethods {
   static contextType = AppContext;
-  // declare context: AppContextData;
+  declare context: AppContextData;
 
   state = {
     email: "",

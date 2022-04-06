@@ -389,6 +389,12 @@ module.exports = function (webpackEnv) {
                 customize: require.resolve("babel-preset-react-app/webpack-overrides"),
                 presets: [
                   [
+                    require.resolve("@babel/preset-typescript"),
+                    {
+                      allowDeclareFields: true,
+                    },
+                  ],
+                  [
                     require.resolve("babel-preset-react-app"),
                     {
                       runtime: hasJsxRuntime ? "automatic" : "classic",
