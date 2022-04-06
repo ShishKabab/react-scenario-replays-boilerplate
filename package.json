@@ -71,9 +71,10 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "scripts": {
-    "start": "concurrently -n FE,BE \"yarn frontend\" \"yarn backend\"",
+    "start": "concurrently -n FE,BE \"yarn frontend\" \"yarn backend:watch\"",
     "frontend": "BROWSER=none node scripts/start.js",
     "backend": "NODE_ENV=development ts-node --project backend/tsconfig.json backend/main.ts",
+    "backend:watch": "NODE_ENV=development nodemon --watch ./backend --watch ./src --exec 'ts-node --project backend/tsconfig.json' backend/main.ts",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },
@@ -112,6 +113,7 @@
     "concurrently": "^7.0.0",
     "husky": "^4",
     "lint-staged": "^12.3.7",
+    "nodemon": "2.0.15",
     "prettier": "^2.6.1",
     "prettier-quick": "^0.0.5",
     "supertest": "^6.2.2",
