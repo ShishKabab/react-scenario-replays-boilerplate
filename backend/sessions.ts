@@ -22,7 +22,7 @@ export function ensureSession(
     return existingSession;
   }
 
-  const newSessionId = app.sessionsGenerated;
+  const newSessionId = ++app.sessionsGenerated;
   const newSession: Session = {};
   app.sessions[newSessionId] = newSession;
   res.header(SESSION_HEADER, newSessionId.toString());

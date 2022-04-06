@@ -110,6 +110,7 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.7",
     "@types/better-sqlite3": "^7.5.0",
+    "@types/cors": "^2.8.12",
     "concurrently": "^7.0.0",
     "husky": "^4",
     "lint-staged": "^12.3.7",
@@ -117,6 +118,7 @@
     "prettier": "^2.6.1",
     "prettier-quick": "^0.0.5",
     "supertest": "^6.2.2",
+    "@types/supertest": "2.0.12",
     "ts-node": "^10.7.0"
   },
   "jest": {
