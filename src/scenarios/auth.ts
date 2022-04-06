@@ -1,17 +1,17 @@
 import { AuthPageMethods } from "../features/auth/pages/types";
-import { ScenarioMap } from "../features/scenario-replays/types";
+import { ScenarioMap, step } from "../features/scenario-replays/types";
 
 export const SCENARIOS: ScenarioMap<{ AuthPage: AuthPageMethods }> = {
-  "login/success": async (context) => [
-    context.step("start", async () => await context.navigateTo("/auth")),
-    context.step(
+  "login/success": () => [
+    step("start", async (context) => await context.navigateTo("/auth")),
+    step(
       "email",
-      async () => await context.componentMethod("AuthPage", "changeEmail", { value: "test@test.com" })
+      async (context) => await context.componentMethod("AuthPage", "changeEmail", { value: "test@test.com" })
     ),
-    context.step(
+    step(
       "password",
-      async () => await context.componentMethod("AuthPage", "changePassword", { value: "spamhameggs" })
+      async (context) => await context.componentMethod("AuthPage", "changePassword", { value: "spamhameggs" })
     ),
-    context.step("submit", async () => await context.componentMethod("AuthPage", "submit", {})),
+    step("submit", async (context) => await context.componentMethod("AuthPage", "submit", {})),
   ],
 };
