@@ -1,8 +1,18 @@
 import { navigateTo } from "../../router";
-import { ComponentSelector, ScenarioComponentMap, ScenarioReplayDependencies, StringKeyOf } from "./types";
+import {
+  ComponentSelector,
+  ScenarioComponentMap,
+  ScenarioReplayDependencies,
+  ScenarioStep,
+  StringKeyOf,
+} from "./types";
 
 export default class ScenarioContext<Components extends ScenarioComponentMap<Components>> {
   constructor(public deps: ScenarioReplayDependencies) {}
+
+  step(name: ScenarioStep["name"], execute: ScenarioStep["execute"]): ScenarioStep {
+    return { name, execute };
+  }
 
   async navigateTo(path: string) {
     navigateTo(this.deps.history, path);

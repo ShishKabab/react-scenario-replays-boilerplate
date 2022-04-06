@@ -8,5 +8,11 @@ export async function replayScenario(identfierString: string, dependencies: Scen
   const scenarioMap = SCENARIOS[identfier.modulePath];
   const scenario = scenarioMap[identfier.scenarioName];
   const context = new ScenarioContext(dependencies);
-  await scenario(context);
+  const steps = await scenario(context);
+  for (const step of steps) {
+    await step.execute();
+    if (identfier.stepName && step.name === identfier.stepName) {
+      break;
+    }
+  }
 }
