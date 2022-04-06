@@ -33,10 +33,10 @@ export function createMetaApplication(): MetaApplication {
 
 export function getApplication(
   metaApp: MetaApplication,
-  req: Pick<express.Request, "body">,
+  req: Pick<express.Request, "get">,
   res: Pick<express.Response, "status" | "send">
 ) {
-  const appId = process.env.NODE_ENV === "development" && req.body.appId;
+  const appId = process.env.NODE_ENV === "development" && req.get("X-Application-ID");
   const app = appId ? metaApp.applications[appId] : metaApp.defaultApplication;
   if (app) {
     return app;

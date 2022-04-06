@@ -30,6 +30,7 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
       return;
     }
     await this.context.backend("/auth/login", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -73,7 +74,7 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
             }
           />
         </div>
-        <button onClick={() => {}}></button>
+        <button onClick={() => this.submit()}>Login</button>
       </div>
     );
   }

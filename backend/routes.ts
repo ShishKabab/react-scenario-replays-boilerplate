@@ -1,7 +1,7 @@
 import type express from "express";
 import { createAppplication, getApplication } from "./application";
 import { ensureSession, getSession } from "./sessions";
-import { ensureUserByEmailAndPassword } from "./storage";
+import { initSchema, ensureUserByEmailAndPassword } from "./storage";
 import { Application, MetaApplication, RequestInfo } from "./types";
 
 function getRequestInfo(
@@ -23,7 +23,7 @@ function withApp(
   f: (ctx: { req: express.Request; res: express.Response; app: Application }) => Promise<void>
 ) {
   return async (req: express.Request, res: express.Response) => {
-    const app = createAppplication(metaApp);
+    const app = getApplication(metaApp, req, res);
     if (!app) {
       return null;
     }
@@ -34,6 +34,7 @@ function withApp(
 export function setupRoutes(metaApp: MetaApplication, expressApp: express.Application) {
   expressApp.post("/app/create", async (req, res) => {
     const app = createAppplication(metaApp);
+    await initSchema(app);
     res.send({ appId: app.id });
   });
   expressApp.post(

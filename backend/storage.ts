@@ -7,7 +7,7 @@ export async function initSchema(app: Pick<Application, "db">) {
   CREATE TABLE user (
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL,
-    passwordHash TEXT NOT NULL,
+    passwordHash TEXT NOT NULL
   );
   `);
 }
