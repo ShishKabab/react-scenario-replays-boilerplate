@@ -7,7 +7,11 @@ import { setupRoutes } from "./routes";
 
 export async function main() {
   const expressApp = express();
-  expressApp.use(cors());
+  expressApp.use(
+    cors({
+      exposedHeaders: ["X-Session-ID"],
+    })
+  );
   expressApp.use(bodyParser.urlencoded({ extended: true }));
   expressApp.use(bodyParser.json());
   expressApp.use(bodyParser.json({ type: "application/vnd.api+json" }));
