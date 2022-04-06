@@ -1,12 +1,14 @@
 import * as React from "react";
+import AppContext, { AppContextData } from "../../../react-context";
 import { enableScenarios, scenarioCallable } from "../../scenario-replays/decorators";
-import { AuthPageMethods } from "./types";
+import { AuthPageMethods, AuthPageState } from "./types";
+import * as logic from "./logic";
+import { navigateTo } from "../../../router";
 
-interface AuthPageState {
-  email: string;
-  password: string;
-}
 class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMethods {
+  static contextType = AppContext;
+  // declare context: AppContextData;
+
   state = {
     email: "",
     password: "",
@@ -22,10 +24,27 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
     this.setState({ password: data.value });
   }
 
+  @scenarioCallable()
+  async submit() {
+    if (!logic.isValid(this.state)) {
+      return;
+    }
+    await this.context.backend("/auth/login", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+        password: this.state.password,
+      }),
+    });
+    navigateTo(this.context.history, "/todo");
+  }
+
   render() {
     return (
       <div>
-        Log in with any e-mail address and password. The dummy backend will accept any e-mail/password combination
+        Log in with any e-mail address and password. The dummy backend will accept any e-mail/password combination.
         <div>
           <label>
             Email:
@@ -54,6 +73,7 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
             }
           />
         </div>
+        <button onClick={() => {}}></button>
       </div>
     );
   }

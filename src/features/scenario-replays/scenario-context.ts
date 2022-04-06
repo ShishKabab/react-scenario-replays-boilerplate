@@ -1,18 +1,11 @@
+import { navigateTo } from "../../router";
 import { ComponentSelector, ScenarioComponentMap, ScenarioReplayDependencies, StringKeyOf } from "./types";
 
 export default class ScenarioContext<Components extends ScenarioComponentMap<Components>> {
   constructor(public deps: ScenarioReplayDependencies) {}
 
   async navigateTo(path: string) {
-    const { history } = this.deps;
-    const { location } = history;
-    const currentUrl = new URL(location.pathname + location.search, window.location.origin);
-    const identifierString = currentUrl.searchParams.get("scenario");
-    if (identifierString) {
-      const nextUrl = new URL(path, window.location.origin);
-      nextUrl.searchParams.set("scenario", identifierString);
-      path = nextUrl.pathname + nextUrl.search;
-    }
+    navigateTo(this.deps.history, path);
   }
 
   componentMethod<

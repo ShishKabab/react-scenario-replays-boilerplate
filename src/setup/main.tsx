@@ -6,8 +6,10 @@ import ComponentRegistry from "../features/scenario-replays/registry";
 import { getRoutes } from "../router";
 import { GlobalQueryParams } from "./types";
 import { replayScenario } from "../features/scenario-replays/replay";
+import AppContext from "../react-context";
+import { createBackendConnection } from "../backend";
 
-export function runMainProgram(options: { queryParams: GlobalQueryParams }) {
+export async function runMainProgram(options: { queryParams: GlobalQueryParams }) {
   console.log("main prog");
   const history = createBrowserHistory();
   const componentRegistry = new ComponentRegistry();
@@ -21,7 +23,14 @@ export function runMainProgram(options: { queryParams: GlobalQueryParams }) {
   const rootElement = document.getElementById("root");
   render(
     <ScenarioReplayContext.Provider value={{ componentRegistry }}>
-      <HistoryRouter history={history}>{getRoutes()}</HistoryRouter>
+      <AppContext.Provider
+        value={{
+          backend: await createBackendConnection(),
+          history,
+        }}
+      >
+        <HistoryRouter history={history}>{getRoutes()}</HistoryRouter>
+      </AppContext.Provider>
     </ScenarioReplayContext.Provider>,
     rootElement
   );

@@ -37,7 +37,7 @@ export function setupRoutes(metaApp: MetaApplication, expressApp: express.Applic
     res.send({ appId: app.id });
   });
   expressApp.post(
-    "/users/login",
+    "/auth/login",
     withApp(metaApp, async ({ app, req, res }) => {
       const { email, password } = req.body;
       const { id: userId } = await ensureUserByEmailAndPassword(app, { email, password });
