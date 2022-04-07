@@ -11,7 +11,7 @@ export function scenarioCallable() {
   };
 }
 
-export function enableScenarios() {
+export function scenarioComponent() {
   return <Props extends object>(WrappedComponent: ComponentType<Props>) => {
     return class ScenarioComponent<Props> extends React.Component<Props> {
       static contextType = ScenarioReplayContext;

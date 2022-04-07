@@ -1,7 +1,7 @@
 import * as React from "react";
 import AppContext, { AppContextData } from "../../../react-context";
 import { executeUITask } from "../../../utils/task-state";
-import { enableScenarios, scenarioCallable } from "../../scenario-replays/decorators";
+import { scenarioComponent, scenarioCallable } from "../../scenario-replays/decorators";
 import { TodoItem } from "../types";
 import { TodoListPageMethods, TodoListPageState } from "./types";
 
@@ -64,4 +64,4 @@ class TodoListPage extends React.Component implements TodoListPageMethods {
   }
 }
 
-export default enableScenarios()(TodoListPage);
+export default scenarioComponent()(TodoListPage);

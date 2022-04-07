@@ -1,6 +1,6 @@
 import * as React from "react";
 import AppContext, { AppContextData } from "../../../react-context";
-import { enableScenarios, scenarioCallable } from "../../scenario-replays/decorators";
+import { scenarioComponent, scenarioCallable } from "../../scenario-replays/decorators";
 import { AuthPageMethods, AuthPageState } from "./types";
 import * as logic from "./logic";
 import { navigateTo } from "../../../router";
@@ -80,4 +80,4 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
   }
 }
 
-export default enableScenarios()(AuthPage);
+export default scenarioComponent()(AuthPage);
