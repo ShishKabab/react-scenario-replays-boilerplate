@@ -8,23 +8,30 @@ import { GlobalQueryParams } from "./types";
 import { replayScenario } from "../features/scenario-replays/replay";
 import AppContext from "../react-context";
 import { createBackendConnection } from "../backend";
+import { ScenarioIdentifier } from "../features/scenario-replays/types";
+import { parseScenarioIdentifier } from "../features/scenario-replays/utils";
 
-export async function runMainProgram(options: {
-  queryParams: GlobalQueryParams;
+export async function runMainProgram(options?: {
+  queryParams?: GlobalQueryParams;
   rootElement?: HTMLElement;
   history?: History;
+  scenarioIdentifier?: ScenarioIdentifier;
 }) {
-  console.log("main prog");
-  const history = options.history ?? createBrowserHistory();
+  const history = options?.history ?? createBrowserHistory();
   const componentRegistry = new ComponentRegistry();
-  if (options.queryParams.scenario) {
-    replayScenario(options.queryParams.scenario, {
+
+  const scenarioIdentifier =
+    options?.scenarioIdentifier ??
+    (options?.queryParams?.scenario && parseScenarioIdentifier(options.queryParams.scenario)) ??
+    null;
+  if (scenarioIdentifier) {
+    replayScenario(scenarioIdentifier, {
       history,
       componentRegistry,
     });
   }
 
-  const rootElement = options.rootElement ?? document.getElementById("root");
+  const rootElement = options?.rootElement ?? document.getElementById("root");
   render(
     <ScenarioReplayContext.Provider value={{ componentRegistry }}>
       <AppContext.Provider

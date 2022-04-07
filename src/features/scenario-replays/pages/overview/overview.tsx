@@ -1,13 +1,19 @@
+import { createMemoryHistory } from "history";
 import React from "react";
 import styled from "styled-components";
+import { runMainProgram } from "../../../../setup/main";
 import { getScenario, getScenarioMap } from "../../replay";
+import { ScenarioIdentifier } from "../../types";
 import { ScenarioInfo, ScenarioMapInfo, ScenarioOverviewProps } from "./types";
 
 const MapContainer = styled.div``;
 const MapTitle = styled.h1``;
 
-const ScenarioContainer = styled.div`
+const ScenarioOuterContainer = styled.div``;
+
+const ScenarioInnerContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const ScenarioTitle = styled.h2``;
@@ -15,8 +21,8 @@ const ScenarioTitle = styled.h2``;
 const StepOuterContainer = styled.div``;
 
 const StepInnerContainer = styled.div`
-  margin-top: 10px;
-  margin-right: 20px;
+  margin: 10px 20px;
+  margin-left: 0px;
   width: 320px;
   height: 640px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -45,6 +51,26 @@ export class ScenarioOverview extends React.Component<ScenarioOverviewProps> {
     this.scenariosMaps.push(mapInfo);
   }
 
+  handleStepRef(map: ScenarioMapInfo, scenario: ScenarioInfo, stepName: string) {
+    return (rootElement: HTMLElement | null) => {
+      if (!rootElement) {
+        return;
+      }
+
+      const history = createMemoryHistory();
+      const scenarioIdentifier: ScenarioIdentifier = {
+        modulePath: map.name,
+        scenarioName: scenario.name,
+        stepName,
+      };
+      runMainProgram({
+        history,
+        scenarioIdentifier,
+        rootElement,
+      });
+    };
+  }
+
   render() {
     return (
       <div>
@@ -52,17 +78,17 @@ export class ScenarioOverview extends React.Component<ScenarioOverviewProps> {
           <MapContainer key={map.name}>
             <MapTitle>{map.name}</MapTitle>
             {map.scenarios.map((scenario) => (
-              <>
+              <ScenarioOuterContainer key={scenario.name}>
                 <ScenarioTitle>{scenario.name}</ScenarioTitle>
-                <ScenarioContainer>
+                <ScenarioInnerContainer>
                   {scenario.steps.map((step) => (
-                    <StepOuterContainer>
+                    <StepOuterContainer key={step}>
                       <StepTitle>{step}</StepTitle>
-                      <StepInnerContainer></StepInnerContainer>
+                      <StepInnerContainer ref={this.handleStepRef(map, scenario, step)}></StepInnerContainer>
                     </StepOuterContainer>
                   ))}
-                </ScenarioContainer>
-              </>
+                </ScenarioInnerContainer>
+              </ScenarioOuterContainer>
             ))}
           </MapContainer>
         ))}

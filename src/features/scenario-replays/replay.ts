@@ -1,7 +1,6 @@
 import { SCENARIOS } from "../../scenarios";
 import ScenarioContext from "./scenario-context";
 import { ScenarioIdentifier, ScenarioReplayDependencies } from "./types";
-import { parseScenarioIdentifier } from "./utils";
 
 export function getScenarioMap(identfier: ScenarioIdentifier) {
   return SCENARIOS[identfier.modulePath!];
@@ -12,8 +11,7 @@ export function getScenario(identfier: ScenarioIdentifier) {
   return scenarioMap[identfier.scenarioName!];
 }
 
-export async function replayScenario(identfierString: string, dependencies: ScenarioReplayDependencies) {
-  const identfier = parseScenarioIdentifier(identfierString);
+export async function replayScenario(identfier: ScenarioIdentifier, dependencies: ScenarioReplayDependencies) {
   const scenario = getScenario(identfier);
   const context = new ScenarioContext(dependencies);
   const steps = await scenario();
