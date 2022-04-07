@@ -7,7 +7,7 @@ import { getRoutes } from "../router";
 import { GlobalQueryParams } from "./types";
 import { replayScenario } from "../features/scenario-replays/replay";
 import AppContext from "../react-context";
-import { createBackendConnection } from "../backend";
+import { createBackendConnection, createBackendGate } from "../backend";
 import { ScenarioIdentifier } from "../features/scenario-replays/types";
 import { parseScenarioIdentifier } from "../features/scenario-replays/utils";
 
@@ -20,15 +20,24 @@ export async function runMainProgram(options?: {
   const history = options?.history ?? createBrowserHistory();
   const componentRegistry = new ComponentRegistry();
 
-  const scenarioIdentifier =
-    options?.scenarioIdentifier ??
-    (options?.queryParams?.scenario && parseScenarioIdentifier(options.queryParams.scenario)) ??
-    null;
-  if (scenarioIdentifier) {
-    replayScenario(scenarioIdentifier, {
-      history,
-      componentRegistry,
-    });
+  let backend = await createBackendConnection();
+  if (process.env.NODE_ENV === "development") {
+    const backendGate = createBackendGate(backend);
+    if (backendGate) {
+      backend = backendGate.backend;
+    }
+
+    let scenarioIdentifier = options?.scenarioIdentifier;
+    if (!scenarioIdentifier && options?.queryParams?.scenario) {
+      scenarioIdentifier = parseScenarioIdentifier(options.queryParams.scenario);
+    }
+    if (scenarioIdentifier) {
+      replayScenario(scenarioIdentifier, {
+        history,
+        componentRegistry,
+        backendGate,
+      });
+    }
   }
 
   const rootElement = options?.rootElement ?? document.getElementById("root");
@@ -36,7 +45,7 @@ export async function runMainProgram(options?: {
     <ScenarioReplayContext.Provider value={{ componentRegistry }}>
       <AppContext.Provider
         value={{
-          backend: await createBackendConnection(),
+          backend,
           history,
         }}
       >

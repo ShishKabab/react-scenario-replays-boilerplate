@@ -1,4 +1,10 @@
+import createResolvable, { Resolvable } from "@josephg/resolvable";
 export type BackendRequester = (url: string, init?: RequestInit) => Promise<Response>;
+export interface BackendGate {
+  backend: BackendRequester;
+  blockUrl(url: string): { undo: () => void };
+  sabotageUrl(url: string): { undo: () => void };
+}
 
 const BACKEND_ORIGIN = process.env.NODE_ENV === "development" ? "http://localhost:3031" : "https://backend.example.com";
 
@@ -18,6 +24,43 @@ export async function createBackendConnection(): Promise<BackendRequester> {
       sessionId = newSessionId;
     }
     return response;
+  };
+}
+
+export function createBackendGate(backend: BackendRequester): BackendGate {
+  const blocked: { [url: string]: Array<Resolvable<void>> } = {};
+  const sabotaged = new Set<string>();
+  return {
+    backend: async (url, init?) => {
+      if (blocked[url]) {
+        const resolvable = createResolvable();
+        blocked[url].push(resolvable);
+        await resolvable;
+      }
+      if (sabotaged.has(url)) {
+        throw new Error(`URL '${url}' has been sabotaged for debugging purposes`);
+      }
+      return backend(url, init);
+    },
+    blockUrl: (url) => {
+      blocked[url] = [];
+      return {
+        undo: () => {
+          for (const resolvable of blocked[url]) {
+            resolvable.resolve();
+          }
+          delete blocked[url];
+        },
+      };
+    },
+    sabotageUrl: (url) => {
+      sabotaged.add(url);
+      return {
+        undo: () => {
+          sabotaged.delete(url);
+        },
+      };
+    },
   };
 }
 

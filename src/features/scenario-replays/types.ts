@@ -1,4 +1,5 @@
 import type { History } from "history";
+import { BackendGate } from "../../backend";
 import type ComponentRegistry from "./registry";
 import ScenarioContext from "./scenario-context";
 
@@ -38,5 +39,6 @@ export type StringKeyOf<T> = Extract<keyof T, string>;
 
 export interface ScenarioReplayDependencies {
   history: History;
+  backendGate: BackendGate;
   componentRegistry: ComponentRegistry;
 }
