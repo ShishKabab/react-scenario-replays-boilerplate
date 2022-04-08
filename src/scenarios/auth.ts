@@ -27,7 +27,6 @@ export const SCENARIOS: ScenarioMap<ScenarioComponents> = {
       context.componentMethod("AuthPage", "submit", {});
     }),
     step("authenticated", async (context) => {
-      console.log("?!!?!");
       context.restoreBackendPath("/auth/login");
     }),
   ],

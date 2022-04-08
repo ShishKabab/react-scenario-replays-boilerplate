@@ -46,7 +46,6 @@ export function createBackendGate(backend: BackendRequester): BackendGate {
       blocked[path] = [];
       return {
         undo: () => {
-          console.log(blocked[path]);
           for (const resolvable of blocked[path]) {
             resolvable.resolve();
           }
