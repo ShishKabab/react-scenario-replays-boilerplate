@@ -17,11 +17,15 @@ export function scenarioComponent() {
       static contextType = ScenarioReplayContext;
       unregisterComponent?(): void;
 
-      handleRef = (ref: React.Component & { _componentRegistry?: ComponentRegistry }) => {
+      handleRef = (ref: React.Component & { _componentId: number; _componentRegistry?: ComponentRegistry }) => {
         const { componentRegistry } = this.context as ScenarioReplayContextData;
         if (ref) {
-          ref._componentRegistry = componentRegistry;
-          this.unregisterComponent = componentRegistry?.register(ref);
+          if (componentRegistry) {
+            ref._componentRegistry = componentRegistry;
+            const { id, unregister } = componentRegistry.registerComponent(ref);
+            ref._componentId = id;
+            this.unregisterComponent = unregister;
+          }
         } else {
           this.unregisterComponent?.();
           delete this.unregisterComponent;

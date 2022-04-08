@@ -9,7 +9,13 @@ export const SCENARIOS: ScenarioMap<ScenarioComponents> = {
       await context.navigateTo("/todo");
     }),
     step("loaded", async (context) => {
-      await context.restoreBackendPath("/todo/items/default");
+      context.restoreBackendPath("/todo/items/default");
+      await context.waitForSignal(
+        "TodoListPage",
+        {},
+        { name: "taskState", selector: { key: "loadState", taskState: "done" } }
+      );
+      console.log("loaded!!");
     }),
   ],
 };

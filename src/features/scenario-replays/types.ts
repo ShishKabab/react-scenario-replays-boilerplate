@@ -31,6 +31,11 @@ export function step<Components extends ScenarioComponentMap<Components>>(
 }
 
 export type ComponentSelector = { [key: string]: any };
+export type SignalSelector = ComponentSelector;
+export interface ComponentSignal {
+  name: string;
+  selector?: SignalSelector;
+}
 export interface WithComponentSelector {
   componentSelector?: ComponentSelector;
 }

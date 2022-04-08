@@ -1,4 +1,5 @@
 import React from "react";
+import { emitSignal } from "../features/scenario-replays/utils";
 
 export type TaskState = "pristine" | "running" | "done" | "error";
 
@@ -7,12 +8,16 @@ export async function executeUITask<Component extends React.Component>(
   stateKey: keyof Component["state"],
   f: () => Promise<void>
 ) {
-  component.setState({ [stateKey]: "running" });
+  const update = (taskState: TaskState) => {
+    emitSignal(component, { name: "taskState", selector: { key: stateKey, taskState } });
+    component.setState({ [stateKey]: taskState });
+  };
+  update("running");
   try {
     await f();
-    component.setState({ [stateKey]: "done" });
+    update("done");
   } catch (err) {
-    component.setState({ [stateKey]: "error" });
+    update("error");
     throw err;
   }
 }

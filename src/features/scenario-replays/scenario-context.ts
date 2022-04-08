@@ -1,6 +1,12 @@
 import { navigateTo } from "../../router";
 import { login } from "../auth/utils";
-import { ComponentSelector, ScenarioComponentMap, ScenarioReplayDependencies, StringKeyOf } from "./types";
+import {
+  ComponentSelector,
+  ComponentSignal,
+  ScenarioComponentMap,
+  ScenarioReplayDependencies,
+  StringKeyOf,
+} from "./types";
 
 export default class ScenarioContext<Components extends ScenarioComponentMap<Components>> {
   _undoBackendModifications: { [url: string]: () => void } = {};
@@ -13,6 +19,14 @@ export default class ScenarioContext<Components extends ScenarioComponentMap<Com
 
   async login(email: string) {
     await login(this.deps.backendGate.backend, email, "testtest");
+  }
+
+  waitForSignal<ComponentName extends StringKeyOf<Components>>(
+    componentName: ComponentName,
+    componentSelector: ComponentSelector,
+    searchSignal: ComponentSignal
+  ) {
+    return this.deps.componentRegistry.waitForSignal(componentName, componentSelector, searchSignal);
   }
 
   componentMethod<

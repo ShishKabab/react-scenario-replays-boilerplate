@@ -1,4 +1,6 @@
-import { ComponentSelector, ScenarioIdentifier } from "./types";
+import type React from "react";
+import type ComponentRegistry from "./registry";
+import type { ComponentSelector, ComponentSignal, ScenarioIdentifier, SignalSelector } from "./types";
 
 export function parseScenarioIdentifier(identifierString: string): ScenarioIdentifier {
   const [modulePath, scenarioName, stepName] = identifierString.split(".");
@@ -13,4 +15,16 @@ export function matchComponentSelector(actual: ComponentSelector, expected: Comp
   }
 
   return true;
+}
+
+export function emitSignal(component: React.Component, signal: ComponentSignal) {
+  const tryEmit = () => {
+    const componentRegistry: ComponentRegistry = (component as any)._componentRegistry;
+    if (!componentRegistry) {
+      setTimeout(tryEmit, 100);
+      return;
+    }
+    componentRegistry.emitSignal((component as any)._componentId, signal);
+  };
+  tryEmit();
 }
