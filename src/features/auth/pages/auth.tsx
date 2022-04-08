@@ -5,6 +5,7 @@ import { AuthPageMethods, AuthPageState } from "./types";
 import * as logic from "./logic";
 import { navigateTo } from "../../../router";
 import { executeUITask } from "../../../utils/task-state";
+import { login } from "../utils";
 
 class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMethods {
   static contextType = AppContext;
@@ -32,16 +33,7 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
       return;
     }
     await executeUITask(this, "submitState", async () => {
-      await this.context.backend("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password,
-        }),
-      });
+      await login(this.context.backend, this.state.email, this.state.password);
     });
     navigateTo(this.context.history, "/todo");
   }

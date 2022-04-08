@@ -1,5 +1,5 @@
-import { BackendGate } from "../../backend";
 import { navigateTo } from "../../router";
+import { login } from "../auth/utils";
 import { ComponentSelector, ScenarioComponentMap, ScenarioReplayDependencies, StringKeyOf } from "./types";
 
 export default class ScenarioContext<Components extends ScenarioComponentMap<Components>> {
@@ -9,6 +9,10 @@ export default class ScenarioContext<Components extends ScenarioComponentMap<Com
 
   async navigateTo(path: string) {
     navigateTo(this.deps.history, path);
+  }
+
+  async login(email: string) {
+    await login(this.deps.backendGate.backend, email, "testtest");
   }
 
   componentMethod<
