@@ -4,14 +4,16 @@ import { scenarioComponent, scenarioCallable } from "../../scenario-replays/deco
 import { AuthPageMethods, AuthPageState } from "./types";
 import * as logic from "./logic";
 import { navigateTo } from "../../../router";
+import { executeUITask } from "../../../utils/task-state";
 
 class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMethods {
   static contextType = AppContext;
   declare context: AppContextData;
 
-  state = {
+  state: AuthPageState = {
     email: "",
     password: "",
+    submitState: "pristine",
   };
 
   @scenarioCallable()
@@ -29,20 +31,29 @@ class AuthPage extends React.Component<{}, AuthPageState> implements AuthPageMet
     if (!logic.isValid(this.state)) {
       return;
     }
-    await this.context.backend("/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
-      }),
+    await executeUITask(this, "submitState", async () => {
+      await this.context.backend("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.password,
+        }),
+      });
     });
     navigateTo(this.context.history, "/todo");
   }
 
   render() {
+    if (this.state.submitState === "running") {
+      return "Logging in...";
+    }
+    if (this.state.submitState === "error") {
+      return "Error logging in...";
+    }
+
     return (
       <div>
         Log in with any e-mail address and password. The dummy backend will accept any e-mail/password combination.

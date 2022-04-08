@@ -12,7 +12,7 @@ export async function executeUITask<Component extends React.Component>(
     await f();
     component.setState({ [stateKey]: "done" });
   } catch (err) {
-    console.error(err);
     component.setState({ [stateKey]: "error" });
+    throw err;
   }
 }

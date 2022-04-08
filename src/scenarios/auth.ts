@@ -1,9 +1,12 @@
 import { AuthPageMethods } from "../features/auth/pages/types";
-import { ScenarioMap, step } from "../features/scenario-replays/types";
+import { ScenarioMap, ScenarioStep, step } from "../features/scenario-replays/types";
 
-export const SCENARIOS: ScenarioMap<{ AuthPage: AuthPageMethods }> = {
-  "login/success": () => [
-    step("start", async (context) => await context.navigateTo("/auth")),
+type ScenarioComponents = {
+  AuthPage: AuthPageMethods;
+};
+
+function fillLoginForm(): ScenarioStep<ScenarioComponents>[] {
+  return [
     step(
       "email",
       async (context) => await context.componentMethod("AuthPage", "changeEmail", { value: "test@test.com" })
@@ -12,6 +15,32 @@ export const SCENARIOS: ScenarioMap<{ AuthPage: AuthPageMethods }> = {
       "password",
       async (context) => await context.componentMethod("AuthPage", "changePassword", { value: "spamhameggs" })
     ),
-    step("submit", async (context) => await context.componentMethod("AuthPage", "submit", {})),
+  ];
+}
+
+export const SCENARIOS: ScenarioMap<ScenarioComponents> = {
+  "login/success": () => [
+    step("start", async (context) => await context.navigateTo("/auth")),
+    ...fillLoginForm(),
+    step("submit", async (context) => {
+      context.blockBackendPath("/auth/login");
+      context.componentMethod("AuthPage", "submit", {});
+    }),
+    step("authenticated", async (context) => {
+      console.log("?!!?!");
+      context.restoreBackendPath("/auth/login");
+    }),
+  ],
+  "login/submit-error": () => [
+    step("start", async (context) => await context.navigateTo("/auth")),
+    ...fillLoginForm(),
+    step("submit", async (context) => {
+      context.sabotageBackendPath("/auth/login");
+      context.blockBackendPath("/auth/login");
+      context.componentMethod("AuthPage", "submit", {});
+    }),
+    step("error", async (context) => {
+      context.restoreBackendPath("/auth/login");
+    }),
   ],
 };

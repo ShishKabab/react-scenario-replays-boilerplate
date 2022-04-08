@@ -2,8 +2,8 @@ import createResolvable, { Resolvable } from "@josephg/resolvable";
 export type BackendRequester = (url: string, init?: RequestInit) => Promise<Response>;
 export interface BackendGate {
   backend: BackendRequester;
-  blockUrl(url: string): { undo: () => void };
-  sabotageUrl(url: string): { undo: () => void };
+  blockPath(path: string): { undo: () => void };
+  sabotagePath(path: string): { undo: () => void };
 }
 
 const BACKEND_ORIGIN = process.env.NODE_ENV === "development" ? "http://localhost:3031" : "https://backend.example.com";
@@ -28,36 +28,37 @@ export async function createBackendConnection(): Promise<BackendRequester> {
 }
 
 export function createBackendGate(backend: BackendRequester): BackendGate {
-  const blocked: { [url: string]: Array<Resolvable<void>> } = {};
+  const blocked: { [path: string]: Array<Resolvable<void>> } = {};
   const sabotaged = new Set<string>();
   return {
-    backend: async (url, init?) => {
-      if (blocked[url]) {
+    backend: async (path, init?) => {
+      if (blocked[path]) {
         const resolvable = createResolvable();
-        blocked[url].push(resolvable);
+        blocked[path].push(resolvable);
         await resolvable;
       }
-      if (sabotaged.has(url)) {
-        throw new Error(`URL '${url}' has been sabotaged for debugging purposes`);
+      if (sabotaged.has(path)) {
+        throw new Error(`Backend path '${path}' has been sabotaged for debugging purposes`);
       }
-      return backend(url, init);
+      return backend(path, init);
     },
-    blockUrl: (url) => {
-      blocked[url] = [];
+    blockPath: (path) => {
+      blocked[path] = [];
       return {
         undo: () => {
-          for (const resolvable of blocked[url]) {
+          console.log(blocked[path]);
+          for (const resolvable of blocked[path]) {
             resolvable.resolve();
           }
-          delete blocked[url];
+          delete blocked[path];
         },
       };
     },
-    sabotageUrl: (url) => {
-      sabotaged.add(url);
+    sabotagePath: (path) => {
+      sabotaged.add(path);
       return {
         undo: () => {
-          sabotaged.delete(url);
+          sabotaged.delete(path);
         },
       };
     },

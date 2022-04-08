@@ -1,13 +1,10 @@
+import { BackendGate } from "../../backend";
 import { navigateTo } from "../../router";
-import {
-  ComponentSelector,
-  ScenarioComponentMap,
-  ScenarioReplayDependencies,
-  ScenarioStep,
-  StringKeyOf,
-} from "./types";
+import { ComponentSelector, ScenarioComponentMap, ScenarioReplayDependencies, StringKeyOf } from "./types";
 
 export default class ScenarioContext<Components extends ScenarioComponentMap<Components>> {
+  _undoBackendModifications: { [url: string]: () => void } = {};
+
   constructor(public deps: ScenarioReplayDependencies) {}
 
   async navigateTo(path: string) {
@@ -48,5 +45,20 @@ export default class ScenarioContext<Components extends ScenarioComponentMap<Com
         : (dataOrMethodName as MethodName);
     const selector: ComponentSelector = typeof methodNameOrSelector !== "string" ? methodNameOrSelector : {};
     await this.deps.componentRegistry.componentMethod(componentName, methodName, data, selector);
+  }
+
+  blockBackendPath(path: string) {
+    const { undo } = this.deps.backendGate.blockPath(path);
+    this._undoBackendModifications[path] = undo;
+  }
+
+  sabotageBackendPath(path: string) {
+    const { undo } = this.deps.backendGate.sabotagePath(path);
+    this._undoBackendModifications[path] = undo;
+  }
+
+  restoreBackendPath(path: string) {
+    this._undoBackendModifications[path]?.();
+    delete this._undoBackendModifications[path];
   }
 }

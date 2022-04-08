@@ -75,7 +75,7 @@
     "start": "concurrently -n FE,BE \"yarn frontend\" \"yarn backend:watch\"",
     "frontend": "BROWSER=none node scripts/start.js",
     "backend": "NODE_ENV=development ts-node --project backend/tsconfig.json backend/main.ts",
-    "backend:watch": "NODE_ENV=development nodemon --watch ./backend --watch ./src --exec 'ts-node --project backend/tsconfig.json' backend/main.ts",
+    "backend:watch": "NODE_ENV=development nodemon --watch ./backend --exec 'ts-node --project backend/tsconfig.json' backend/main.ts",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },
