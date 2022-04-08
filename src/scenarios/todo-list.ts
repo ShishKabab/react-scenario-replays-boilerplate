@@ -1,9 +1,5 @@
-import { AuthPageMethods } from "../features/auth/pages/types";
 import { ScenarioMap, step } from "../features/scenario-replays/types";
-
-type ScenarioComponents = {
-  AuthPage: AuthPageMethods;
-};
+import type { ScenarioComponents } from "./types";
 
 export const SCENARIOS: ScenarioMap<ScenarioComponents> = {
   default: () => [

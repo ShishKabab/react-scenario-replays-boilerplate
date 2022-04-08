@@ -1,9 +1,5 @@
-import { AuthPageMethods } from "../features/auth/pages/types";
 import { ScenarioMap, ScenarioStep, step } from "../features/scenario-replays/types";
-
-type ScenarioComponents = {
-  AuthPage: AuthPageMethods;
-};
+import { ScenarioComponents } from "./types";
 
 function fillLoginForm(): ScenarioStep<ScenarioComponents>[] {
   return [
