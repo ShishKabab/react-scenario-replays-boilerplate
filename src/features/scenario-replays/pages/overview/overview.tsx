@@ -30,6 +30,10 @@ const StepInnerContainer = styled.div`
 `;
 const StepTitle = styled.div``;
 
+const ScenarioLink = styled.a`
+  color: inherit;
+`;
+
 export class ScenarioOverview extends React.Component<ScenarioOverviewProps> {
   scenariosMaps: ScenarioMapInfo[] = [];
 
@@ -87,14 +91,28 @@ export class ScenarioOverview extends React.Component<ScenarioOverviewProps> {
       <div>
         {this.scenariosMaps.map((map) => (
           <MapContainer key={map.name}>
-            <MapTitle>{map.name}</MapTitle>
+            <MapTitle>
+              <ScenarioLink href={`/?meta=true&scenario=${map.name}`}>{map.name}</ScenarioLink>
+            </MapTitle>
             {map.scenarios.map((scenario) => (
               <ScenarioOuterContainer key={scenario.name}>
-                <ScenarioTitle>{scenario.name}</ScenarioTitle>
+                <ScenarioTitle>
+                  <ScenarioLink href={`/?meta=true&scenario=${map.name}.${encodeURIComponent(scenario.name)}`}>
+                    {scenario.name}
+                  </ScenarioLink>
+                </ScenarioTitle>
                 <ScenarioInnerContainer>
                   {scenario.steps.map((step) => (
                     <StepOuterContainer key={step}>
-                      <StepTitle>{step}</StepTitle>
+                      <StepTitle>
+                        <ScenarioLink
+                          href={`/?scenario=${map.name}.${encodeURIComponent(scenario.name)}.${encodeURIComponent(
+                            step
+                          )}`}
+                        >
+                          {step}
+                        </ScenarioLink>
+                      </StepTitle>
                       <StepInnerContainer ref={this.handleStepRef(map, scenario, step)}></StepInnerContainer>
                     </StepOuterContainer>
                   ))}

@@ -62,7 +62,6 @@ What is not implemented yet:
 - [ ] Styling of the main program and overview UI
 - [ ] Data-driven scenario replays that can be recorded from user interactions
 - [ ] Fixture generation, saving and loading
-- [ ] Links from overview UI to specific scenarios and scenario steps
 - [ ] Making overview UI play nice with media queries
 - [ ] Running the entire back-end in browser to eliminate need of starting seperate back-end during development
 - [ ] Using scenarios in combination with end-to-end browser tests
