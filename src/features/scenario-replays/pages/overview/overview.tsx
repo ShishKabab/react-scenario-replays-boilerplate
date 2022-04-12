@@ -1,6 +1,7 @@
 import { createMemoryHistory } from "history";
 import React from "react";
 import styled from "styled-components";
+import { SCENARIOS } from "../../../../scenarios";
 import { runMainProgram } from "../../../../setup/main";
 import { getScenario, getScenarioMap } from "../../replay";
 import { ScenarioIdentifier } from "../../types";
@@ -36,6 +37,16 @@ export class ScenarioOverview extends React.Component<ScenarioOverviewProps> {
     super(props);
 
     const { identifier } = props;
+    if (!identifier.modulePath) {
+      for (const modulePath of Object.keys(SCENARIOS)) {
+        this.pushScenarioMap({ modulePath });
+      }
+    } else {
+      this.pushScenarioMap(identifier);
+    }
+  }
+
+  pushScenarioMap(identifier: ScenarioIdentifier) {
     const mapInfo: ScenarioMapInfo = { name: identifier.modulePath!, scenarios: [] };
     if (!identifier.scenarioName) {
       const scenarioMap = getScenarioMap(identifier);

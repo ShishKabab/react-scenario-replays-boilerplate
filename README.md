@@ -29,6 +29,7 @@ That said, you can build browser testing on top of scenario replays by spinning 
 
 Clone out this repository and run `npm install`/`yarn`. Run the development server and back-end with `npm start` (or `yarn start`) You can then go to:
 
+- the overview UI of all scenarios in the entire program: http://localhost:3000/?meta=true
 - the overview UI of all scenarios on a specific page: http://localhost:3000/?meta=true&scenario=auth
 - the overview UI of a specific scenario on a specific page: http://localhost:3000/?meta=true&scenario=auth.login%2Fsuccess
 - a scenario at a specific step: http://localhost:3000/?scenario=auth.login%2Fsuccess.password (entered password, but just before submitting)
@@ -59,7 +60,6 @@ What is implemented:
 What is not implemented yet:
 
 - [ ] Styling of the main program and overview UI
-- [ ] Overview UI of all workflows in the program, instead of only specific parts by URL (small fix)
 - [ ] Data-driven scenario replays that can be recorded from user interactions
 - [ ] Fixture generation, saving and loading
 - [ ] Links from overview UI to specific scenarios and scenario steps
@@ -68,3 +68,5 @@ What is not implemented yet:
 - [ ] Using scenarios in combination with end-to-end browser tests
 - [ ] Nicer scenario and step descriptions
 - [ ] Embedding scenarios in user-facing documentation so you can you product documentation with always up-to-date screenshots
+- [ ] Make scenarios lazy load
+- [ ] Factor out scenario replay utilities into separate package
