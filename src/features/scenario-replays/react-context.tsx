@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import ComponentRegistry from "./registry";
+import ComponentRegistry from "./component-registry";
 
 export interface ScenarioReplayContextData {
   componentRegistry?: ComponentRegistry;

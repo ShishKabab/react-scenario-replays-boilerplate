@@ -1,6 +1,6 @@
 import React, { ComponentType } from "react";
 import ScenarioReplayContext, { ScenarioReplayContextData } from "./react-context";
-import ComponentRegistry from "./registry";
+import ComponentRegistry from "./component-registry";
 
 export function scenarioCallable() {
   return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {

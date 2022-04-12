@@ -1,6 +1,6 @@
 import type { History } from "history";
 import { BackendGate } from "../../backend";
-import type ComponentRegistry from "./registry";
+import type ComponentRegistry from "./component-registry";
 import ScenarioContext from "./scenario-context";
 
 export interface ScenarioIdentifier {

@@ -1,5 +1,5 @@
 import type React from "react";
-import type ComponentRegistry from "./registry";
+import type ComponentRegistry from "./component-registry";
 import type { ComponentSelector, ComponentSignal, ScenarioIdentifier, SignalSelector } from "./types";
 
 export function parseScenarioIdentifier(identifierString: string): ScenarioIdentifier {

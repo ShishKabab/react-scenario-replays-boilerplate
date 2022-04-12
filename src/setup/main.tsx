@@ -2,7 +2,7 @@ import { render } from "react-dom";
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { createBrowserHistory, History } from "history";
 import ScenarioReplayContext from "../features/scenario-replays/react-context";
-import ComponentRegistry from "../features/scenario-replays/registry";
+import ComponentRegistry from "../features/scenario-replays/component-registry";
 import { getRoutes } from "../router";
 import { GlobalQueryParams } from "./types";
 import { replayScenario } from "../features/scenario-replays/replay";
